@@ -2,82 +2,71 @@
 
 ## Overview
 
-This project demonstrates a manual web application security assessment performed against DVWA (Damn Vulnerable Web Application) using Burp Suite Community Edition in a Kali Linux lab environment.
+This project demonstrates a manual web application security assessment performed against **DVWA (Damn Vulnerable Web Application)** using **Burp Suite Community Edition** in a Kali Linux lab environment.
 
-The objective was to intercept HTTP requests, analyze request/response behavior, manipulate application parameters, and validate SQL Injection vulnerabilities using Burp Repeater.
+## Burp Proxy Interception
 
-## Lab Environment
+Burp Suite was configured as an intercepting proxy to capture HTTP requests before they reached the DVWA application.
 
-* Kali Linux
-* DVWA (Apache / PHP / MySQL)
-* Burp Suite Community Edition
-* Firefox Browser
+![Burp Proxy Interception](screenshots/burp_proxy_intercept.png)
 
-## Assessment Workflow
+## Burp Repeater Analysis
 
-1. Configured Burp Suite Proxy and Firefox for HTTP interception.
-2. Captured requests sent to the DVWA SQL Injection module.
-3. Sent requests to Burp Repeater for manual testing.
-4. Modified the `id` parameter to test SQL Injection behavior.
-5. Compared server responses to identify vulnerability indicators.
-6. Documented findings and evidence.
+Captured requests were forwarded to Burp Repeater to perform controlled parameter manipulation and observe server responses.
+
+![Burp Repeater Analysis](screenshots/burp_repeater_response.png)
 
 ## SQL Injection Testing
 
 ### Baseline Request
 
-A normal request using `id=1` returned a single valid user record.
+A normal request using `id=1` returned a single valid user record and was used as the baseline for comparison.
+
+![Baseline Request](screenshots/sqli_normal_request.png)
 
 ### Malformed Input Test
 
-Payload:
+**Payload:** `1'`
 
-`1'`
+**Observation:**
 
-Result:
-
-* HTTP 500 Internal Server Error
+* Application returned **HTTP 500 Internal Server Error**
 * Indicates that unsanitized input reached the backend SQL query and caused a server-side failure.
+
+![Malformed Input Test](screenshots/sqli_internal_server_error.png)
 
 ### Boolean-based SQL Injection
 
-Payload:
+**Payload:** `1' OR '1'='1`
 
-`1' OR '1'='1`
-
-Result:
+**Observation:**
 
 * Returned multiple user records
 * Demonstrated successful SQL Injection through parameter manipulation.
 
+![Boolean-based SQL Injection](screenshots/sqli_boolean_based.png)
+
 ### UNION-based SQL Injection
 
-Payload:
+**Payload:** `1' UNION SELECT user,password FROM users#`
 
-`1' UNION SELECT user,password FROM users#`
-
-Result:
+**Observation:**
 
 * Extracted usernames and password hashes from the backend database
-* Demonstrated data retrieval through UNION-based SQL Injection.
+* Demonstrated successful data retrieval through UNION-based SQL Injection.
 
-## Evidence
+![UNION-based SQL Injection](screenshots/sqli_union_based.png)
 
-The repository includes:
+## Assessment Findings
 
-* Burp Proxy interception screenshots
-* Burp Repeater screenshots
-* SQL Injection test evidence
-* Raw repeater request used during assessment
-* Assessment report
+* Burp Suite Proxy successfully intercepted HTTP requests.
+* Burp Repeater enabled manual parameter manipulation.
+* SQL Injection vulnerability was confirmed through malformed input behavior.
+* Boolean-based SQL Injection returned multiple database records.
+* UNION-based SQL Injection exposed usernames and password hashes from the backend database.
 
-## Skills Demonstrated
+## Report
 
-* HTTP request interception
-* HTTP response analysis
-* Burp Suite Proxy
-* Burp Repeater
-* Parameter tampering
-* SQL Injection validation
-* OWASP Top 10 awareness
-* Manual web application penetration testing
+A detailed assessment report is included in:
+
+`report/DVWA_SQL_Injection_Assessment_Report.pdf`
